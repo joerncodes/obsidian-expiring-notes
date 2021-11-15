@@ -8,12 +8,14 @@ interface ExpiringNotesSettings {
 	frontmatterKey: string;
 	behavior: string;
 	checkOnStartup: boolean;
+	archivePath: string;
 }
 
 const DEFAULT_SETTINGS: ExpiringNotesSettings = {
 	frontmatterKey: 'expires',
 	behavior: 'delete',
-	checkOnStartup: false
+	checkOnStartup: false,
+	archivePath: 'Archive'
 }
 
 export default class ExpiringNotesPlugin extends Plugin {
@@ -21,6 +23,7 @@ export default class ExpiringNotesPlugin extends Plugin {
 
 	async checkForExpiredNotes() {
 		let expiredNotes = this.collectExpiredNotes();
+		let amount = expiredNotes.length;
 
 		if (this.settings.behavior === 'delete') {
 
@@ -28,25 +31,38 @@ export default class ExpiringNotesPlugin extends Plugin {
 					this.deleteExpiredNote(file);
 			});
 
-			new Notice('Deleted ' + expiredNotes.length + ' expired note(s).');
+			new Notice('Deleted ' + amount + ' expired note(s).');
 		}
 
 		if (this.settings.behavior === 'archive') {
 
-			expiredNotes.forEach((file) => {
-				this.archiveExpiredNote(file);
+			await expiredNotes.forEach(async (file) => {
+				if(!await this.archiveExpiredNote(file)) {
+					amount--;
+				}
 			});
 
-			new Notice('Archived  ' + expiredNotes.length + ' expired note(s).');
+			if(amount) {
+				new Notice('Archived  ' + amount + ' expired note(s).');
+			}
 		}
 	}
 
-	async archiveExpiredNote(file: TFile): Promise<void> {
+	async archiveExpiredNote(file: TFile): Promise<boolean> {
 		let root = this.app.vault.getRoot().path;
-		let destination = normalizePath(root + 'Archive/' + file.basename + '.' + file.extension);
-		console.log(destination);
+		let destination = normalizePath(root + this.settings.archivePath + '/' + file.basename + '.' + file.extension);
 
+		if (file.path == destination) {
+			return false;
+		}
+
+		let previousFile = this.app.vault.getAbstractFileByPath(destination);
+		if(previousFile) {
+			this.app.vault.delete(previousFile);
+		}
+		
 		await this.app.fileManager.renameFile(file, destination);
+		return true;
 	}
 
 	deleteExpiredNote(file: TFile): void {

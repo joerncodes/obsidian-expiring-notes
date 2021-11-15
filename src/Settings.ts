@@ -25,16 +25,27 @@ export default class ExpiringNotesSettingTab extends PluginSettingTab {
 				.onChange(async (value) => {
 					this.plugin.settings.frontmatterKey = value;
 					await this.plugin.saveSettings();
-				}));
+				})
+            );
 		
+        new Setting(containerEl)
+        .setName('Check for expired notes at startup')
+        .addToggle((t) => {
+            t.setValue(this.plugin.settings.checkOnStartup);
+            t.onChange(async (v) => {
+                this.plugin.settings.checkOnStartup = v;
+                await this.plugin.saveSettings();
+            });
+        });
+
 		new Setting(containerEl)
 			.setName('Behavior')
 			.setDesc('Choose what should happen to your notes once they have expired.')
 			.addDropdown((d) => {
 				d.addOption("delete", "Delete file");
-				d.addOption("trash", "Move to archive folder");
+				d.addOption("archive", "Move to archive folder");
 				d.setValue(this.plugin.settings.behavior);
-				d.onChange(async (v: "delete" | "trash") => {
+				d.onChange(async (v: "delete" | "archive") => {
 					this.plugin.settings.behavior = v;
 					await this.plugin.saveSettings();
 				}
@@ -42,13 +53,15 @@ export default class ExpiringNotesSettingTab extends PluginSettingTab {
         });
 
         new Setting(containerEl)
-            .setName('Check for expired notes at startup')
-            .addToggle((t) => {
-                t.setValue(this.plugin.settings.checkOnStartup);
-                t.onChange(async (v) => {
-                    this.plugin.settings.checkOnStartup = v;
-                    await this.plugin.saveSettings();
-                });
-            });
+            .setName('Archive folder path')
+            .setDesc('The path to your preferred archive folder, for example "Archive" or "Trash"')
+            .addText(text => text
+                .setPlaceholder(this.plugin.settings.archivePath)
+                .setValue(this.plugin.settings.archivePath)
+                .onChange(async (value) => {
+					this.plugin.settings.archivePath = value;
+					await this.plugin.saveSettings();
+				})
+            );
     }
 }
