@@ -1,16 +1,19 @@
 import { Moment } from 'moment';
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, TFile, FrontMatterCache, DropdownComponent, normalizePath } from 'obsidian';
+import ExpiringNotesSettingTab from 'src/Settings';
 
 // Remember to rename these classes and interfaces!
 
 interface ExpiringNotesSettings {
 	frontmatterKey: string;
 	behavior: string;
+	checkOnStartup: boolean;
 }
 
 const DEFAULT_SETTINGS: ExpiringNotesSettings = {
 	frontmatterKey: 'expires',
-	behavior: 'delete'
+	behavior: 'delete',
+	checkOnStartup: false
 }
 
 export default class ExpiringNotesPlugin extends Plugin {
@@ -28,19 +31,19 @@ export default class ExpiringNotesPlugin extends Plugin {
 			new Notice('Deleted ' + expiredNotes.length + ' expired note(s).');
 		}
 
-		if (this.settings.behavior === 'trash') {
+		if (this.settings.behavior === 'archive') {
 
 			expiredNotes.forEach((file) => {
-				this.trashExpiredNote(file);
+				this.archiveExpiredNote(file);
 			});
 
-			new Notice('Trashed  ' + expiredNotes.length + ' expired note(s).');
+			new Notice('Archived  ' + expiredNotes.length + ' expired note(s).');
 		}
 	}
 
-	async trashExpiredNote(file: TFile): Promise<void> {
+	async archiveExpiredNote(file: TFile): Promise<void> {
 		let root = this.app.vault.getRoot().path;
-		let destination = normalizePath(root + 'Trash/' + file.basename + '.' + file.extension);
+		let destination = normalizePath(root + 'Archive/' + file.basename + '.' + file.extension);
 		console.log(destination);
 
 		await this.app.fileManager.renameFile(file, destination);
@@ -87,15 +90,13 @@ export default class ExpiringNotesPlugin extends Plugin {
 			}
 		});
 
-		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new ExpiringNotesSettingTab(this.app, this));
 
-		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
-		// this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
-
-		this.app.workspace.onLayoutReady(() => {
-			this.checkForExpiredNotes();
-        });
+		if (this.settings.checkOnStartup) {
+			this.app.workspace.onLayoutReady(() => {
+				this.checkForExpiredNotes();
+			});	
+		}
 	}
 
 	onunload() {
@@ -108,48 +109,5 @@ export default class ExpiringNotesPlugin extends Plugin {
 
 	async saveSettings() {
 		await this.saveData(this.settings);
-	}
-}
-
-class ExpiringNotesSettingTab extends PluginSettingTab {
-	plugin: ExpiringNotesPlugin;
-
-	constructor(app: App, plugin: ExpiringNotesPlugin) {
-		super(app, plugin);
-		this.plugin = plugin;
-	}
-
-	display(): void {
-		const {containerEl} = this;
-
-		containerEl.empty();
-
-		containerEl.createEl('h2', {text: 'Expiring Notes settings'});
-
-		new Setting(containerEl)
-			.setName('Frontmatter key')
-			.setDesc('Enter the key which you would like to use in your note\'s frontmatter to identify the note\'s expiry date.')
-			.addText(text => text
-				.setPlaceholder('expires')
-				.setValue(this.plugin.settings.frontmatterKey)
-				.onChange(async (value) => {
-					this.plugin.settings.frontmatterKey = value;
-					await this.plugin.saveSettings();
-				}));
-		
-		new Setting(containerEl)
-			.setName('Behavior')
-			.setDesc('Choose what should happen to your notes once they have expired.')
-			.addDropdown((d) => {
-				d.addOption("delete", "Delete file");
-				d.addOption("trash", "Move to trash folder");
-				d.setValue(this.plugin.settings.behavior);
-				d.onChange(async (v: "delete" | "trash") => {
-					this.plugin.settings.behavior = v;
-					await this.plugin.saveSettings();
-				});
-
-			});
-				
 	}
 }
