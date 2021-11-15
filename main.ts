@@ -55,6 +55,7 @@ export default class ExpiringNotesPlugin extends Plugin {
 		let now = window.moment();
 
 		let allFiles = this.app.vault.getMarkdownFiles();
+
 		allFiles.forEach((file) => {
 			const metadata = this.app.metadataCache.getFileCache(file);
 			if(typeof metadata.frontmatter === 'undefined') {
@@ -92,7 +93,9 @@ export default class ExpiringNotesPlugin extends Plugin {
 		// When registering intervals, this function will automatically clear the interval when the plugin is disabled.
 		// this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
 
-		this.checkForExpiredNotes();
+		this.app.workspace.onLayoutReady(() => {
+			this.checkForExpiredNotes();
+        });
 	}
 
 	onunload() {
