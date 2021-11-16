@@ -4,7 +4,7 @@ import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Set
 import Archive from 'src/archive';
 import Collector from 'src/collector';
 import ConfirmModal from 'src/confirm';
-import { MESSAGE_CONFIRM_ARCHIVE, MESSAGE_CONFIRM_DELETION } from 'src/messages';
+import { MESSAGE_CONFIRM_ARCHIVE, MESSAGE_CONFIRM_DELETION, BEHAVIOR_ARCHIVE, BEHAVIOR_DELETE } from 'src/constants';
 import ExpiringNotesSettingTab from 'src/settings';
 
 // Remember to rename these classes and interfaces!
@@ -19,7 +19,7 @@ interface ExpiringNotesSettings {
 
 const DEFAULT_SETTINGS: ExpiringNotesSettings = {
 	frontmatterKey: 'expires',
-	behavior: 'delete',
+	behavior: BEHAVIOR_DELETE,
 	checkOnStartup: false,
 	archivePath: 'Archive',
 	confirm: true
@@ -40,7 +40,7 @@ export default class ExpiringNotesPlugin extends Plugin {
 
 		if(this.settings.confirm) {
 			let modal = new ConfirmModal(this.app);
-			let message = this.settings.behavior == 'delete' 
+			let message = this.settings.behavior == BEHAVIOR_DELETE
 				? MESSAGE_CONFIRM_DELETION
 				: MESSAGE_CONFIRM_ARCHIVE;
 			message = message.replace('%s', amount.toString());
@@ -60,7 +60,7 @@ export default class ExpiringNotesPlugin extends Plugin {
 
 	async handleExpiredNotes(expiredNotes: TFile[]) {
 		let amount = expiredNotes.length;
-		if (this.settings.behavior == 'delete') {
+		if (this.settings.behavior == BEHAVIOR_DELETE) {
 
 			expiredNotes.forEach((file) => {
 					this.deleteExpiredNote(file);
@@ -69,7 +69,7 @@ export default class ExpiringNotesPlugin extends Plugin {
 			new Notice('Deleted ' + amount + ' expired note(s).');
 		}
 
-		if (this.settings.behavior === 'archive') {
+		if (this.settings.behavior === BEHAVIOR_ARCHIVE) {
 			await expiredNotes.forEach(async (file) => {
 				if(!await this.archiveExpiredNote(file)) {
 					amount--;
