@@ -37,7 +37,7 @@ Expiring Notes has two different modes of operation: delete and archive.
 
 If a note gets deleted, it vanishes from your vault forever - there is no undo. Please use with appropriate caution.
 
-If a note is archived, it gets moved to a predefined archive folder (you can customize the path in settings). Please note that if a file with the same name already exists in the archive, it will get overwritten. Also, the archive is flat, meaning that the "path" to your file will not be preserved in archive.
+If a note is archived, it gets moved to a predefined archive folder (you can customize the path in settings). Please note that if a file with the same name already exists in the archive, it will get overwritten. 
 
 ## Settings
 

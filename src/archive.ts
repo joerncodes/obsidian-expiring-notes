@@ -8,13 +8,31 @@ export default class Archive {
         this.plugin = plugin;
     }
 
-    getArchivePathForFile(file: TFile): string {
+    getArchivePath(file: TFile): string {
         let root = this.plugin.app.vault.getRoot().path;
-		return normalizePath(root + this.plugin.settings.archivePath + '/' + file.basename + '.' + file.extension);
+        let archiveDirPath = file.path.replace(file.name, '');
+        
+        return normalizePath(
+            root 
+            + this.plugin.settings.archivePath 
+            + '/'
+            + archiveDirPath
+        );
+
+    }
+
+    getArchivePathWithFile(file: TFile): string {
+        let root = this.plugin.app.vault.getRoot().path;
+        console.log(file);
+		return normalizePath(
+            this.getArchivePath(file)
+            + '/'
+            + file.name
+        );
     }
 
     isFileArchived(file: TFile): boolean {
-        let archivePath = this.getArchivePathForFile(file);
+        let archivePath = this.getArchivePathWithFile(file);
         return file.path == archivePath;
     }
 }

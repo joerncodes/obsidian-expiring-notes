@@ -86,7 +86,15 @@ export default class ExpiringNotesPlugin extends Plugin {
 
 	async archiveExpiredNote(file: TFile): Promise<boolean> {
 		let archive = new Archive(this);
-		let destination = archive.getArchivePathForFile(file);
+		console.log('creating ' + archive.getArchivePath(file));
+
+		try {
+			await this.app.vault.createFolder(archive.getArchivePath(file));
+		} catch(error) {
+			// folder already exists
+		}
+		
+		let destination = archive.getArchivePathWithFile(file);
 
 		let previousFile = this.app.vault.getAbstractFileByPath(destination);
 		if(previousFile) {
