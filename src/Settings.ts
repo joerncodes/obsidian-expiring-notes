@@ -58,12 +58,14 @@ export default class ExpiringNotesSettingTab extends PluginSettingTab {
 				d.setValue(this.plugin.settings.behavior);
 				d.onChange(async (v: "delete" | "archive") => {
 					this.plugin.settings.behavior = v;
+                    this.display();
 					await this.plugin.saveSettings();
 				}
             );
         });
 
-        new Setting(containerEl)
+        if (this.plugin.settings.behavior == 'archive') {
+            new Setting(containerEl)
             .setName('Archive folder path')
             .setDesc('The path to your preferred archive folder, for example "Archive" or "Trash"')
             .addText(text => text
@@ -74,5 +76,7 @@ export default class ExpiringNotesSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 				})
             );
+        }
+        
     }
 }
