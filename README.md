@@ -58,4 +58,6 @@ If a note is archived, it gets moved to a predefined archive folder (you can cus
 
 ## Contributing
 
-Any issue opened here on GitHub is appreciated. PRs are welcomed with open arms.
+I'm hoping to make Expiring Notes as awesome as possible, and I need your help to do it. Any issue opened here on GitHub is appreciated, whether it be a bug or a feature request. 
+
+If you want to take the time to do a PR, those are welcomed with open arms.
