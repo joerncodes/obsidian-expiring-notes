@@ -11,8 +11,9 @@ Example for those ephemeral notes include:
 
 - information that is only valid for a certain time
 - coupon and voucher codes with an expiry date
-- information you just jotted down that won't be important in a day or two
+- any information you just jotted down quickly that won't be important in a day or two
 - any ephemeral information you want to dump into your vault
+- if you're feeling lucky: set the expiry date on your novel draft to the end of November. Either it's done by then, or...
 
 ## Installation
 
