@@ -9,6 +9,12 @@ Example for those ephemeral notes include:
 - information you just jotted down that won't be important in a day or two
 - any ephemeral information you want to dump into your vault
 
+## Installation
+
+As this plugin is currently in early development, you can use [BRAT](https://github.com/TfTHacker/obsidian42-brat) to install it.
+
+Use the path `joerncodes/obsidian-expiring-notes`.
+
 ## How to make a note expire
 
 To mark a note to expire in the future, use a predefined frontmatter key like so:

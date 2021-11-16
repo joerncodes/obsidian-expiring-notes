@@ -1,10 +1,1 @@
-{
-	"id": "obsidian-expiring-notes",
-	"name": "Expiring Notes",
-	"version": "0.0.1",
-	"minAppVersion": "0.12.0",
-	"description": "Automatically delete certain notes after a pre-set date.",
-	"author": "JoernCodes",
-	"authorUrl": "https://github.com/joerncodes",
-	"isDesktopOnly": false
-}
+{"id":"obsidian-expiring-notes","name":"Expiring Notes","version":"0.0.1","minAppVersion":"0.12.0","description":"Automatically delete certain notes after a pre-set date.","author":"JoernCodes","authorUrl":"https://github.com/joerncodes","isDesktopOnly":false}
