@@ -1,6 +1,8 @@
 import * as exp from 'constants';
 import { Moment } from 'moment';
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, TFile, FrontMatterCache, DropdownComponent, normalizePath } from 'obsidian';
+import Archive from 'src/archive';
+import Collector from 'src/collector';
 import ConfirmModal from 'src/confirm';
 import { MESSAGE_CONFIRM_ARCHIVE, MESSAGE_CONFIRM_DELETION } from 'src/messages';
 import ExpiringNotesSettingTab from 'src/settings';
@@ -27,7 +29,8 @@ export default class ExpiringNotesPlugin extends Plugin {
 	settings: ExpiringNotesSettings;
 
 	async checkForExpiredNotes() {
-		let expiredNotes = this.collectExpiredNotes();
+		let collector = new Collector(this);
+		let expiredNotes = collector.collectExpiredNotes();
 		let amount = expiredNotes.length;
 
 		if (!amount) {
@@ -80,12 +83,8 @@ export default class ExpiringNotesPlugin extends Plugin {
 	}
 
 	async archiveExpiredNote(file: TFile): Promise<boolean> {
-		let root = this.app.vault.getRoot().path;
-		let destination = normalizePath(root + this.settings.archivePath + '/' + file.basename + '.' + file.extension);
-
-		if (file.path == destination) {
-			return false;
-		}
+		let archive = new Archive(this);
+		let destination = archive.getArchivePathForFile(file);
 
 		let previousFile = this.app.vault.getAbstractFileByPath(destination);
 		if(previousFile) {
@@ -98,32 +97,6 @@ export default class ExpiringNotesPlugin extends Plugin {
 
 	deleteExpiredNote(file: TFile): void {
 		this.app.vault.delete(file);
-	}
-
-	collectExpiredNotes(): TFile[] {
-		let collected: TFile[] = [];
-		let now = window.moment();
-
-		let allFiles = this.app.vault.getMarkdownFiles();
-
-		allFiles.forEach((file) => {
-			const metadata = this.app.metadataCache.getFileCache(file);
-			if(typeof metadata.frontmatter === 'undefined') {
-				return;
-			}
-
-			if (this.settings.frontmatterKey in metadata.frontmatter) {
-				let expiryDateString = metadata.frontmatter[this.settings.frontmatterKey];
-				let fileDate = window.moment(expiryDateString);
-
-
-				if (fileDate.isBefore(now)) {
-					collected.push(file);
-				}
-			}
-		});
-		
-		return collected;
 	}
 
 	async onload() {
