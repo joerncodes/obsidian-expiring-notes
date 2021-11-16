@@ -1,6 +1,9 @@
+import * as exp from 'constants';
 import { Moment } from 'moment';
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, TFile, FrontMatterCache, DropdownComponent, normalizePath } from 'obsidian';
-import ExpiringNotesSettingTab from 'src/Settings';
+import ConfirmModal from 'src/confirm';
+import { MESSAGE_CONFIRM_ARCHIVE, MESSAGE_CONFIRM_DELETION } from 'src/messages';
+import ExpiringNotesSettingTab from 'src/settings';
 
 // Remember to rename these classes and interfaces!
 
@@ -9,13 +12,15 @@ interface ExpiringNotesSettings {
 	behavior: string;
 	checkOnStartup: boolean;
 	archivePath: string;
+	confirm: boolean;
 }
 
 const DEFAULT_SETTINGS: ExpiringNotesSettings = {
 	frontmatterKey: 'expires',
 	behavior: 'delete',
 	checkOnStartup: false,
-	archivePath: 'Archive'
+	archivePath: 'Archive',
+	confirm: true
 }
 
 export default class ExpiringNotesPlugin extends Plugin {
@@ -25,7 +30,34 @@ export default class ExpiringNotesPlugin extends Plugin {
 		let expiredNotes = this.collectExpiredNotes();
 		let amount = expiredNotes.length;
 
-		if (this.settings.behavior === 'delete') {
+		if (!amount) {
+			return;
+		}
+
+
+		if(this.settings.confirm) {
+			let modal = new ConfirmModal(this.app);
+			let message = this.settings.behavior == 'delete' 
+				? MESSAGE_CONFIRM_DELETION
+				: MESSAGE_CONFIRM_ARCHIVE;
+			message = message.replace('%s', amount.toString());
+			modal.message = message;
+
+			modal.callback = (response: boolean) => {
+				if(response) {
+					this.handleExpiredNotes(expiredNotes);
+				}
+			};
+			modal.open();
+			return;
+		}
+
+		this.handleExpiredNotes(expiredNotes);
+	}
+
+	async handleExpiredNotes(expiredNotes: TFile[]) {
+		let amount = expiredNotes.length;
+		if (this.settings.behavior == 'delete') {
 
 			expiredNotes.forEach((file) => {
 					this.deleteExpiredNote(file);
@@ -35,7 +67,6 @@ export default class ExpiringNotesPlugin extends Plugin {
 		}
 
 		if (this.settings.behavior === 'archive') {
-
 			await expiredNotes.forEach(async (file) => {
 				if(!await this.archiveExpiredNote(file)) {
 					amount--;

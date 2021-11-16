@@ -38,6 +38,17 @@ export default class ExpiringNotesSettingTab extends PluginSettingTab {
             });
         });
 
+        new Setting(containerEl)
+            .setName('Enable confirm dialogue')
+            .setDesc('Shows a dialog asking you to confirm before archiving / deleting expired notes.')
+            .addToggle((t) => {
+                t.setValue(this.plugin.settings.confirm);
+                t.onChange(async (v) => {
+                    this.plugin.settings.confirm = v;
+                    await this.plugin.saveSettings();
+                });
+            });
+
 		new Setting(containerEl)
 			.setName('Behavior')
 			.setDesc('Choose what should happen to your notes once they have expired.')
