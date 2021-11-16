@@ -16,6 +16,16 @@ export default class ExpiringNotesSettingTab extends PluginSettingTab {
 
 		containerEl.createEl('h2', {text: 'Expiring Notes settings'});
 
+        new Setting(containerEl)
+        .setName('Check for expired notes at startup')
+        .addToggle((t) => {
+            t.setValue(this.plugin.settings.checkOnStartup);
+            t.onChange(async (v) => {
+                this.plugin.settings.checkOnStartup = v;
+                await this.plugin.saveSettings();
+            });
+        });
+
 		new Setting(containerEl)
 			.setName('Frontmatter key')
 			.setDesc('Enter the key which you would like to use in your note\'s frontmatter to identify the note\'s expiry date.')
@@ -28,15 +38,30 @@ export default class ExpiringNotesSettingTab extends PluginSettingTab {
 				})
             );
 		
-        new Setting(containerEl)
-        .setName('Check for expired notes at startup')
-        .addToggle((t) => {
-            t.setValue(this.plugin.settings.checkOnStartup);
-            t.onChange(async (v) => {
-                this.plugin.settings.checkOnStartup = v;
-                await this.plugin.saveSettings();
-            });
-        });
+        let desc = document.createDocumentFragment();
+        desc.append(
+            'Set the date format you prefer to use to specify your expiry dates.',
+            desc.createEl('br'),
+            'Visit ',
+            desc.createEl('a', {
+                href: 'https://momentjscom.readthedocs.io/en/latest/moment/04-displaying/01-format/',
+                text: 'momentjs.com',
+            }),
+            ' to get a list of all available tokens.'
+        );
+    
+        let dateFormatSetting = new Setting(containerEl)
+            .setName('Date format')
+            .setDesc(desc)
+			.addText(text => text
+				.setPlaceholder('YYYY-MM-DD')
+				.setValue(this.plugin.settings.dateFormat)
+				.onChange(async (value) => {
+					this.plugin.settings.dateFormat = value;
+					await this.plugin.saveSettings();
+				})
+            );
+        
 
         new Setting(containerEl)
             .setName('Enable confirm dialogue')

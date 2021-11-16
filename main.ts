@@ -15,6 +15,7 @@ interface ExpiringNotesSettings {
 	checkOnStartup: boolean;
 	archivePath: string;
 	confirm: boolean;
+	dateFormat: string;
 }
 
 const DEFAULT_SETTINGS: ExpiringNotesSettings = {
@@ -22,7 +23,8 @@ const DEFAULT_SETTINGS: ExpiringNotesSettings = {
 	behavior: BEHAVIOR_DELETE,
 	checkOnStartup: false,
 	archivePath: 'Archive',
-	confirm: true
+	confirm: true,
+	dateFormat: 'YYYY-MM-DD'
 }
 
 export default class ExpiringNotesPlugin extends Plugin {

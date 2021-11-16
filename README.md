@@ -43,6 +43,8 @@ If a note is archived, it gets moved to a predefined archive folder (you can cus
 <dl>
   <dt>Frontmatter key</dt>
   <dd>This is the key you use to provide an expiry date. The default is 'expires'.</dd>
+  <dt>Date format</dt>
+  <dd>Used to specify the date format you want to write your expiry dates in. Visit <a href="https://momentjscom.readthedocs.io/en/latest/moment/04-displaying/01-format/">momentjs.com</a> for a list of possible date tokens.</dd>
   <dt>Check for expired notes at startup</dt>
   <dd>If this is enabled, Expiring Notes will collect all expired notes when you start Obsidian.</dd>
   <dt>Enable confirm dialogue</dt>

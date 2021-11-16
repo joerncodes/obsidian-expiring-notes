@@ -25,7 +25,7 @@ export default class Collector {
 
 			if (this.plugin.settings.frontmatterKey in metadata.frontmatter) {
 				let expiryDateString = metadata.frontmatter[this.plugin.settings.frontmatterKey];
-				let fileDate = window.moment(expiryDateString);
+				let fileDate = window.moment(expiryDateString, this.plugin.settings.dateFormat);
 
                 if(this.archive.isFileArchived(file)) {
                     return;

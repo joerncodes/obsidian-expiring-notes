@@ -1,5 +1,5 @@
 import { App, ButtonComponent, Modal } from 'obsidian';
-import { CONFIRM_MODEL_TITLE } from './messages';
+import { CONFIRM_MODEL_TITLE } from './constants';
 
 export default class ConfirmModal extends Modal {
     message = '';
