@@ -39,9 +39,8 @@ export default class ExpiringNotesPlugin extends Plugin {
 			return;
 		}
 
-
 		if(this.settings.confirm) {
-			let modal = new ConfirmModal(this.app);
+			let modal = new ConfirmModal(this.app, expiredNotes);
 			let message = this.settings.behavior == BEHAVIOR_DELETE
 				? MESSAGE_CONFIRM_DELETION
 				: MESSAGE_CONFIRM_ARCHIVE;

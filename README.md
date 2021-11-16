@@ -17,9 +17,9 @@ Example for those ephemeral notes include:
 
 ## Installation
 
-As this plugin is currently in early development, you can use [BRAT](https://github.com/TfTHacker/obsidian42-brat) to install it.
+As this plugin is currently in early development, you can use [BRAT](https://github.com/TfTHacker/obsidian42-brat) to install it. Use the path `joerncodes/obsidian-expiring-notes`.
 
-Use the path `joerncodes/obsidian-expiring-notes`.
+If you're interested in helping to make Expiring Notes a finished product, please see [Contributing][#contributing].
 
 ## How to make a note expire
 
