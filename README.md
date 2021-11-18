@@ -39,6 +39,16 @@ If a note gets deleted, it vanishes from your vault forever - there is no undo. 
 
 If a note is archived, it gets moved to a predefined archive folder (you can customize the path in settings). Please note that if a file with the same name already exists in the archive, it will get overwritten. 
 
+## Commands
+
+### Set Expiry Date
+
+Use this command to set or modify the expiry date of the currently opened note.
+
+### Check for expired notes
+
+Scan your vault for expired notes and then either delete or archive them, depending on the behavior you set in your [Settings](#Settings).
+
 ## Settings
 
 <dl>
@@ -55,6 +65,10 @@ If a note is archived, it gets moved to a predefined archive folder (you can cus
   <dt>Archive folder path</dt>
   <dd>Provide the folder path for your archive (relative to your Obsidian vault root.</dd>
 </dl>
+
+## Changelog
+
+You can find the [changelog here](/joerncodes/obsidian-expiring-notes/changelog.md).
 
 ## Contributing
 

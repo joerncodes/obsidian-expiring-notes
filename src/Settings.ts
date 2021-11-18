@@ -57,6 +57,9 @@ export default class ExpiringNotesSettingTab extends PluginSettingTab {
 				.setPlaceholder('YYYY-MM-DD')
 				.setValue(this.plugin.settings.dateFormat)
 				.onChange(async (value) => {
+                    if(!value) {
+                        value = 'YYYY-MM-DD';
+                    }
 					this.plugin.settings.dateFormat = value;
 					await this.plugin.saveSettings();
 				})

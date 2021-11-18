@@ -1,11 +1,12 @@
-import * as exp from 'constants';
-import { Moment } from 'moment';
 import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, TFile, FrontMatterCache, DropdownComponent, normalizePath } from 'obsidian';
 import Archive from 'src/archive';
 import Collector from 'src/collector';
 import ConfirmModal from 'src/confirm';
-import { MESSAGE_CONFIRM_ARCHIVE, MESSAGE_CONFIRM_DELETION, BEHAVIOR_ARCHIVE, BEHAVIOR_DELETE } from 'src/constants';
+import { MESSAGE_CONFIRM_ARCHIVE, MESSAGE_CONFIRM_DELETION, BEHAVIOR_ARCHIVE, BEHAVIOR_DELETE, EXPIRY_DATE_PROMPT } from 'src/constants';
 import ExpiringNotesSettingTab from 'src/settings';
+import { TextPromptModal } from 'src/textpromptmodal';
+import * as jsyaml from 'src/js-yaml';
+import FrontmatterParser from 'src/frontmatterparser';
 
 // Remember to rename these classes and interfaces!
 
@@ -85,7 +86,6 @@ export default class ExpiringNotesPlugin extends Plugin {
 
 	async archiveExpiredNote(file: TFile): Promise<boolean> {
 		let archive = new Archive(this);
-		console.log('creating ' + archive.getArchivePath(file));
 
 		try {
 			await this.app.vault.createFolder(archive.getArchivePath(file));
@@ -108,6 +108,22 @@ export default class ExpiringNotesPlugin extends Plugin {
 		this.app.vault.delete(file);
 	}
 
+	setExpiryDate() {
+		let prompt = EXPIRY_DATE_PROMPT.replace('%s', this.settings.dateFormat);
+		let modal = new TextPromptModal(this.app, prompt, window.moment().format(this.settings.dateFormat));
+		modal.callback = async (value) => {
+			let file = this.app.workspace.getActiveFile();
+			let content = await this.app.vault.read(file);
+
+			let parser = new FrontmatterParser(content);
+			parser.setFrontmatter(this.settings.frontmatterKey, value);
+			let result = parser.saveFrontmatter();
+			
+			await this.app.vault.modify(file, result);
+		};
+		modal.open();
+	}
+
 	async onload() {
 		await this.loadSettings();
 
@@ -116,6 +132,14 @@ export default class ExpiringNotesPlugin extends Plugin {
 			name: 'Check for expired notes',
 			callback: () => {
 				this.checkForExpiredNotes();
+			}
+		});
+
+		this.addCommand({
+			id: 'expiring-notes-expiry-date',
+			name: 'Set expiry date',
+			callback: () => {
+				this.setExpiryDate();
 			}
 		});
 

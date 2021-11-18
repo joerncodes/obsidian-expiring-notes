@@ -27,6 +27,7 @@ export default class ConfirmModal extends Modal {
       }
 
       const controls = this.contentEl.createDiv();
+      controls.addClass('expiring-notes-buttons-container');
       const confirmButton = controls.createEl('button', { text: this.confirm, cls: 'mod-cta' });
       confirmButton.addEventListener('click', () => {
         this.callback(true);
