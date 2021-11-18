@@ -11,6 +11,7 @@ export default class Archive {
     getArchivePath(file: TFile): string {
         let root = this.plugin.app.vault.getRoot().path;
         let archiveDirPath = file.path.replace(file.name, '');
+        archiveDirPath = archiveDirPath.replace(this.plugin.settings.archivePath + '/', '');
         
         return normalizePath(
             root 
@@ -23,7 +24,6 @@ export default class Archive {
 
     getArchivePathWithFile(file: TFile): string {
         let root = this.plugin.app.vault.getRoot().path;
-        console.log(file);
 		return normalizePath(
             this.getArchivePath(file)
             + '/'
@@ -33,6 +33,8 @@ export default class Archive {
 
     isFileArchived(file: TFile): boolean {
         let archivePath = this.getArchivePathWithFile(file);
+        console.log(archivePath);
+        console.log(file.path);
         return file.path == archivePath;
     }
 }

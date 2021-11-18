@@ -4,6 +4,7 @@
 
 - Minor styling fixes
 - Added command "Set expiry date"
+- Notes nested in one or multiple sub-folders now get nested in the archive correctly
 
 ## 0.0.1
 
