@@ -68,7 +68,7 @@ Scan your vault for expired notes and then either delete or archive them, depend
 
 ## Changelog
 
-You can find the [changelog here](changelog.md).
+You can find the [changelog here](https://github.com/joerncodes/obsidian-expiring-notes/changelog.md).
 
 ## Contributing
 
