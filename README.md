@@ -3,7 +3,11 @@
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/joerncodes/obsidian-expiring-notes?style=for-the-badge&sort=semver)](https://github.com/joerncodes/obsidian-expiring-notes/releases/latest)
 ![GitHub All Releases](https://img.shields.io/github/downloads/joerncodes/obsidian-expiring-notes/total?style=for-the-badge)
 
+----
 
+**Important note**: This plugin is still very much **in beta**. There are still bugs I'm trying to work out, so before we go live in the Community Plugin repository, I'd be delighted if you could report any bugs you find. Thank you!
+
+----
 
 An [Obsidian](https://obsidian.md) plugin to automatically delete or archive notes that have "expired". With this, you can give your notes a "best by" date and make them disappear as soon as they're obsolete, keeping your vault clean and uncluttered.
 
