@@ -2,11 +2,11 @@ import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Set
 import Archive from 'src/archive';
 import Collector from 'src/collector';
 import ConfirmModal from 'src/confirm';
-import { MESSAGE_CONFIRM_ARCHIVE, MESSAGE_CONFIRM_DELETION, BEHAVIOR_ARCHIVE, BEHAVIOR_DELETE, EXPIRY_DATE_PROMPT } from 'src/constants';
+import { MESSAGE_CONFIRM_ARCHIVE, MESSAGE_CONFIRM_DELETION, BEHAVIOR_ARCHIVE, BEHAVIOR_DELETE, EXPIRY_DATE_PROMPT, EXPIRY_DATE_DESC, EXPIRY_DATE_EXAMPLES } from 'src/constants';
 import ExpiringNotesSettingTab from 'src/settings';
 import { TextPromptModal } from 'src/textpromptmodal';
-import * as jsyaml from 'src/js-yaml';
 import FrontmatterParser from 'src/frontmatterparser';
+import * as chrono from 'chrono-node';
 
 // Remember to rename these classes and interfaces!
 
@@ -109,9 +109,12 @@ export default class ExpiringNotesPlugin extends Plugin {
 	}
 
 	setExpiryDate() {
-		let prompt = EXPIRY_DATE_PROMPT.replace('%s', this.settings.dateFormat);
-		let modal = new TextPromptModal(this.app, prompt, window.moment().format(this.settings.dateFormat));
+		let desc = EXPIRY_DATE_DESC.replace('%s', this.settings.dateFormat);
+		let modal = new TextPromptModal(this.app, EXPIRY_DATE_PROMPT, desc, EXPIRY_DATE_EXAMPLES, window.moment().format(this.settings.dateFormat));
 		modal.callback = async (value) => {
+			let date = chrono.parseDate(value);
+			value = window.moment(date).format(this.settings.dateFormat);
+
 			let file = this.app.workspace.getActiveFile();
 			let content = await this.app.vault.read(file);
 

@@ -8,6 +8,8 @@ export class TextPromptModal extends Modal {
     constructor(
         app: App,
         private prompt: string,
+        private desc: string,
+        private examples: any[],
         private defaultValue: string
     ) {
         super(app);
@@ -16,6 +18,11 @@ export class TextPromptModal extends Modal {
     onOpen(): void {
         this.titleEl.setText(this.prompt);
         const div = this.contentEl.createDiv();
+        div.createEl('p', { text: this.desc });
+        const ul = div.createEl('ul');
+        this.examples.shuffle().slice(0, 3).forEach(example => {
+            ul.createEl('li', { text: example});
+        });
 
         const form = div.createEl('form');
         form.type = 'submit';

@@ -47,7 +47,14 @@ If a note is archived, it gets moved to a predefined archive folder (you can cus
 
 ### Set Expiry Date
 
-Use this command to set or modify the expiry date of the currently opened note.
+Use this command to set or modify the expiry date of the currently opened note. You can provide the date either in your chosen date format (see [Settings](#Settings)), or using natural date parsing. Some examples include:
+
+- today
+- tomorrow
+- 1 week ago
+- 1 month from now
+- September 12
+- next year
 
 ### Check for expired notes
 
