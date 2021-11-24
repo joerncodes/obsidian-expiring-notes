@@ -33,8 +33,6 @@ export default class Archive {
 
     isFileArchived(file: TFile): boolean {
         let archivePath = this.getArchivePathWithFile(file);
-        console.log(archivePath);
-        console.log(file.path);
         return file.path == archivePath;
     }
 }
