@@ -42,7 +42,6 @@ export default class FrontmatterParser
 
     saveFrontmatter(): string
     {
-        console.log(this.frontmatter);
         let result = '---\n';
         this.frontmatter.forEach(fm => {
             result += fm.getKey() + ': ' + fm.getValue() + '\n';
