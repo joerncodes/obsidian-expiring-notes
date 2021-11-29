@@ -2,13 +2,11 @@ import { App, Editor, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Set
 import Archive from 'src/archive';
 import Collector from 'src/collector';
 import ConfirmModal from 'src/confirm';
-import { MESSAGE_CONFIRM_ARCHIVE, MESSAGE_CONFIRM_DELETION, BEHAVIOR_ARCHIVE, BEHAVIOR_DELETE, EXPIRY_DATE_PROMPT, EXPIRY_DATE_DESC, EXPIRY_DATE_EXAMPLES } from 'src/constants';
+import { MESSAGE_CONFIRM_ARCHIVE, MESSAGE_CONFIRM_DELETION, BEHAVIOR_ARCHIVE, BEHAVIOR_DELETE, EXPIRY_DATE_PROMPT, EXPIRY_DATE_DESC, MESSAGE_CONFIRM_DELETION_SINGULAR, MESSAGE_CONFIRM_ARCHIVE_SINGULAR } from 'src/constants';
 import ExpiringNotesSettingTab from 'src/settings';
-import { TextPromptModal } from 'src/textpromptmodal';
 import FrontmatterParser from 'src/frontmatterparser';
 import * as chrono from 'chrono-node';
-
-// Remember to rename these classes and interfaces!
+import { ExpiryDatePromptModal } from 'src/expirydatepromptmodal';
 
 interface ExpiringNotesSettings {
 	frontmatterKey: string;
@@ -42,9 +40,15 @@ export default class ExpiringNotesPlugin extends Plugin {
 
 		if(this.settings.confirm) {
 			let modal = new ConfirmModal(this.app, expiredNotes);
-			let message = this.settings.behavior == BEHAVIOR_DELETE
-				? MESSAGE_CONFIRM_DELETION
-				: MESSAGE_CONFIRM_ARCHIVE;
+
+			let message:string;
+			
+			if(this.settings.behavior == BEHAVIOR_DELETE) {
+				message = expiredNotes.length == 1 ? MESSAGE_CONFIRM_DELETION_SINGULAR : MESSAGE_CONFIRM_DELETION;
+			} else {
+				message = expiredNotes.length == 1 ? MESSAGE_CONFIRM_ARCHIVE_SINGULAR : MESSAGE_CONFIRM_ARCHIVE;
+			}
+
 			message = message.replace('%s', amount.toString());
 			modal.message = message;
 
@@ -109,8 +113,8 @@ export default class ExpiringNotesPlugin extends Plugin {
 	}
 
 	setExpiryDate() {
-		let desc = EXPIRY_DATE_DESC.replace('%s', this.settings.dateFormat);
-		let modal = new TextPromptModal(this.app, EXPIRY_DATE_PROMPT, desc, EXPIRY_DATE_EXAMPLES, window.moment().format(this.settings.dateFormat));
+		let modal = new ExpiryDatePromptModal(this.app, window.moment().format(this.settings.dateFormat));
+
 		modal.callback = async (value) => {
 			let date = chrono.parseDate(value);
 			value = window.moment(date).format(this.settings.dateFormat);
@@ -155,9 +159,7 @@ export default class ExpiringNotesPlugin extends Plugin {
 		}
 	}
 
-	onunload() {
-
-	}
+	onunload() {}
 
 	async loadSettings() {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());

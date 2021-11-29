@@ -20,7 +20,7 @@ export default class ConfirmModal extends Modal {
       this.contentEl.createEl('p', { text: this.message });
       
       this.expiredNotes.slice(0,5).forEach(file => {
-        this.contentEl.createEl('p', { text: '- ' + file.path});
+        this.contentEl.createEl('p', { text: '- ' + file.path });
       });
       if(this.expiredNotes.length > 5) {
         this.contentEl.createEl('p', { text: '...and ' + (this.expiredNotes.length - 5).toString() + ' more'});

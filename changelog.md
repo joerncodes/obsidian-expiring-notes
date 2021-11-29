@@ -1,5 +1,11 @@
 # Obsidian Expiring Notes changelog
 
+## 0.0.4
+
+- UI changes to the "Set expiry date" modal
+- Minor refactoring
+- Singular and plural messages for confirm modal
+
 ## 0.0.3
 
 - Made the "Set expiry date" more robust; works better with different frontmatter entries
