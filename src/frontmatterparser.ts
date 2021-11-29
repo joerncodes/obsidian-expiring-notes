@@ -1,4 +1,3 @@
-import * as jsyaml from 'src/js-yaml';
 import { FrontmatterEntry } from './frontmatterentry';
 
 export default class FrontmatterParser
