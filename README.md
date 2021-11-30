@@ -27,13 +27,15 @@ If you're interested in helping to make Expiring Notes a finished product, pleas
 
 ## How to make a note expire
 
-To mark a note to expire in the future, use a predefined frontmatter key like so:
+To mark a note to expire in the future, this plugin uses a predefined frontmatter key like so:
 
 ```yaml
 expires: 2021-01-01
 ```
 
 In this example, this note will automatically be either archived or deleted after January 1st, 2021.
+
+You can either write the frontmatter yourself or use the [Set Expiry Date command](https://github.com/joerncodes/obsidian-expiring-notes#set-expiry-date).
 
 ## Archive / Delete
 
@@ -64,7 +66,7 @@ Scan your vault for expired notes and then either delete or archive them, depend
 
 <dl>
   <dt>Frontmatter key</dt>
-  <dd>This is the key you use to provide an expiry date. The default is 'expires'.</dd>
+	<dd>This is the key you use to provide an expiry date. The default is <code>expires</code>.</dd>
   <dt>Date format</dt>
   <dd>Used to specify the date format you want to write your expiry dates in. Visit <a href="https://momentjscom.readthedocs.io/en/latest/moment/04-displaying/01-format/">momentjs.com</a> for a list of possible date tokens.</dd>
   <dt>Check for expired notes at startup</dt>
@@ -74,7 +76,7 @@ Scan your vault for expired notes and then either delete or archive them, depend
   <dt>Behavior</dt>
   <dd>Choose if your notes should be <em>deleted</em> (this has no undo) or moved to a predefined archive folder. Please note that files with the same name will overwrite older files in your archive folder.</dd>
   <dt>Archive folder path</dt>
-  <dd>Provide the folder path for your archive (relative to your Obsidian vault root.</dd>
+  <dd>Provide the folder path for your archive (relative to your Obsidian vault root).</dd>
 </dl>
 
 ## Changelog
